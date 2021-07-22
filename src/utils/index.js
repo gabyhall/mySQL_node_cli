@@ -55,23 +55,22 @@ exports.updatePass = (username, newPass) => {
     })
 };
 
-exports.deleteUser = (username) => {
-    const user = {
-        username: username
-    }
-    sql.query("DELETE FROM users WHERE username=?", user.username, (error, result) => { 
+exports.deleteUser = (username, pass) => { //password check//
+    const user = [username, pass]
+    sql.query("DELETE FROM movies WHERE userID = (SELECT id from users WHERE username = ? AND pass = ?)", user)
+    sql.query("DELETE FROM users WHERE username=?", user, (error, result) => { 
         if (error) {
             console.log(error);
         } console.log(result);
-    }) // will need to add to this once movies set up//
+    })
 };
     
 
 
 
-exports.addMovie = (title, actor, user) => {
-    const movie = [title, actor, user];
-    sql.query("INSERT INTO movies SET title = ?, actor = ?, userID = (SELECT id from users WHERE username = ?)", movie, (error, result) => { 
+exports.addMovie = (title, actor, category, user, pass) => { //password check//
+    const movie = [title, actor, category, user, pass];
+    sql.query("INSERT INTO movies SET title = ?, actor = ?, category = ?, userID = (SELECT id from users WHERE username = ? AND pass = ?)", movie, (error, result) => { 
         if (error) {
             console.log(error);
         } console.log(result);
@@ -86,7 +85,7 @@ exports.listMovies = () => {
     })
 };
 
-exports.findMovie = (user, pass, title) => { //password check works here - incorporate elsewhere //
+exports.findMovie = (user, pass, title) => { //password check //
     const movie = [title, user, pass]
     sql.query("SELECT * FROM movies WHERE title = ? AND userID = (SELECT id from users WHERE username = ? AND pass = ?)", movie, (error, results) => {
         if (error) {
@@ -113,9 +112,27 @@ exports.rateMovie = (user, title, rating) => {
     })
 };
 
-exports.deleteMovie = (user, pass, title) => { 
+exports.deleteMovie = (user, pass, title) => { //password check//
     const movie = [title, user, pass];
     sql.query("DELETE FROM movies WHERE title = ? AND userID = (SELECT id from users WHERE username = ? AND pass = ?)", movie, (error, result) => { 
+        if (error) {
+            console.log(error);
+        } console.log(result);
+    })
+};
+
+
+exports.child = () => {
+    sql.query("SELECT *, CASE WHEN category = 'horror' THEN 'this is definitely not for kids' WHEN category = 'thriller' THEN 'this is probably not for kids' WHEN category = 'musical' THEN 'this might be appropriate for kids' WHEN category = 'animation' THEN 'this is probably child-friendly' ELSE 'child-friendliness unknown' END AS children FROM movies", (error, result) => {
+        if (error) {
+            console.log(error);
+        } console.log(result);
+    })
+};
+
+exports.averageCat = (user, category) => {
+    const calc = [category, user];
+    sql.query("SELECT AVG(rating) FROM movies WHERE category = ? AND watched = 'true' AND userID = (SELECT id FROM users WHERE username = ?)", calc, (error, result) => {
         if (error) {
             console.log(error);
         } console.log(result);
