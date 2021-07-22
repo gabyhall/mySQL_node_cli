@@ -6,7 +6,7 @@ exports.addUser = (username, password) => {
             username: username,
             pass: password
         }
-        sql.query("INSERT INTO users SET ?", user) // INSERT INTO users SET username = "name entered", pass = "test123" //
+        sql.query("INSERT INTO users SET ?", user)
     } catch (error) {
         console.log(error)
     }
@@ -78,9 +78,17 @@ exports.addMovie = (title, actor, user) => {
     })
 };
 
-
 exports.listMovies = () => {
     sql.query("SELECT * FROM movies", (error, results) => {
+        if (error) {
+            console.log(error);
+        } console.log(results);
+    })
+};
+
+exports.findMovie = (user, pass, title) => { //password check works here - incorporate elsewhere //
+    const movie = [title, user, pass]
+    sql.query("SELECT * FROM movies WHERE title = ? AND userID = (SELECT id from users WHERE username = ? AND pass = ?)", movie, (error, results) => {
         if (error) {
             console.log(error);
         } console.log(results);
@@ -96,9 +104,18 @@ exports.updateMovie = (user, title) => {
     });
 };
 
-exports.deleteMovie = (user, title) => {
-    const movie = [title, user];
-    sql.query("DELETE FROM movies WHERE title = ? AND userID = (SELECT id from users WHERE username = ?)", movie, (error, result) => { 
+exports.rateMovie = (user, title, rating) => {
+    const movie = [rating, title, user];
+    sql.query("UPDATE movies SET rating = ? WHERE title = ? AND userID = (SELECT id from users WHERE username = ?)", movie, (error, result) => { 
+        if (error) {
+            console.log(error);
+        } console.log(result);
+    })
+};
+
+exports.deleteMovie = (user, pass, title) => { 
+    const movie = [title, user, pass];
+    sql.query("DELETE FROM movies WHERE title = ? AND userID = (SELECT id from users WHERE username = ? AND pass = ?)", movie, (error, result) => { 
         if (error) {
             console.log(error);
         } console.log(result);
