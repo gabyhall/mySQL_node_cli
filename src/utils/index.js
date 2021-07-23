@@ -138,3 +138,19 @@ exports.averageCat = (user, category) => {
         } console.log(result);
     })
 };
+
+exports.showRatings = () => {
+    sql.query("SELECT users.username, movies.title, movies.actor, movies.rating FROM users INNER JOIN movies ON movies.userID = users.id WHERE movies.rating IS NOT NULL AND movies.actor IS NOT NULL", (error, result) => {
+        if (error) {
+            console.log(error);
+        } console.log(result);
+    })
+};
+
+exports.showCatWatched = () => {
+    sql.query("SELECT users.username, movies.title, movies.category, movies.watched FROM users INNER JOIN movies ON movies.userID = users.id", (error, result) => {
+        if (error) {
+            console.log(error);
+        } console.log(result);
+    })
+};
