@@ -24,7 +24,7 @@ const actor = yargs.argv.actor;
 const category = yargs.argv.category;
 const rating = yargs.argv.rating;
 const newPass = yargs.argv.newPass;
-const newName = yargs.argv.new;
+const newName = yargs.argv.newName;
 
 const app = () => {
     if (command === 'add user') {
@@ -40,7 +40,7 @@ const app = () => {
     } else if (command === 'delete user') {
         deleteUser(user, pass);             // requires password//
     } else if (command === 'add movie') {
-        addMovie(title, actor, category, user, pass); // requires password//
+        addMovie(user, pass, title, actor, category); // requires password//
     } else if (command === 'list movies') { 
         listMovies();
     } else if (command === 'find movie') {

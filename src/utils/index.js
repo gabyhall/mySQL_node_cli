@@ -1,3 +1,4 @@
+const connection = require('../db/connection');
 const sql = require('../db/connection');
 
 exports.addUser = (username, password) => {
@@ -7,6 +8,8 @@ exports.addUser = (username, password) => {
             pass: password
         }
         sql.query("INSERT INTO users SET ?", user)
+        console.log('User added');
+        connection.end();
     } catch (error) {
         console.log(error)
     }
@@ -17,6 +20,7 @@ exports.listUsers = () => {
         if (error) {
             console.log(error);
         } console.log(results);
+        connection.end();
     })
 };
 
@@ -30,6 +34,7 @@ exports.findUser = (username, password) => {
         if (error) {
             console.log(error);
         } console.log(result);
+        connection.end();
     });
 };
     
@@ -41,6 +46,8 @@ exports.updateUser = (username, newName) => {
         if (error) {
             console.log(error);
         } console.log(result);
+            console.log('Username updated');
+            connection.end();
     }) 
  };  
     
@@ -52,6 +59,8 @@ exports.updatePass = (username, newPass) => {
         if (error) {
             console.log(error);
         } console.log(result);
+            console.log('Password updated');
+            connection.end();
     })
 };
 
@@ -62,35 +71,39 @@ exports.deleteUser = (username, pass) => { //password check//
         if (error) {
             console.log(error);
         } console.log(result);
+            console.log('User deleted');
+            connection.end();
     })
 };
     
 
-
-
-exports.addMovie = (title, actor, category, user, pass) => { //password check//
+exports.addMovie = (user, pass, title, actor, category) => { //password check//
     const movie = [title, actor, category, user, pass];
     sql.query("INSERT INTO movies SET title = ?, actor = ?, category = ?, userID = (SELECT id from users WHERE username = ? AND pass = ?)", movie, (error, result) => { 
         if (error) {
             console.log(error);
         } console.log(result);
+        console.log('Movie added to list');
+        connection.end();
     })
 };
 
 exports.listMovies = () => {
-    sql.query("SELECT * FROM movies", (error, results) => {
+    sql.query("SELECT * FROM movies", (error, result) => {
         if (error) {
             console.log(error);
-        } console.log(results);
+        } console.log(result);
+        connection.end();
     })
 };
 
 exports.findMovie = (user, pass, title) => { //password check //
     const movie = [title, user, pass]
-    sql.query("SELECT * FROM movies WHERE title = ? AND userID = (SELECT id from users WHERE username = ? AND pass = ?)", movie, (error, results) => {
+    sql.query("SELECT * FROM movies WHERE title = ? AND userID = (SELECT id from users WHERE username = ? AND pass = ?)", movie, (error, result) => {
         if (error) {
             console.log(error);
-        } console.log(results);
+        } console.log(result);
+        connection.end();
     })
 };
 
@@ -100,6 +113,8 @@ exports.updateMovie = (user, title) => {
         if (error) {
             console.log(error);
         } console.log(result);
+            console.log('Movie status updated to watched');
+            connection.end();
     });
 };
 
@@ -109,7 +124,9 @@ exports.rateMovie = (user, title, rating) => {
         if (error) {
             console.log(error);
         } console.log(result);
-    })
+            console.log('Movie rating updated');
+            connection.end();
+    }) 
 };
 
 exports.deleteMovie = (user, pass, title) => { //password check//
@@ -118,6 +135,8 @@ exports.deleteMovie = (user, pass, title) => { //password check//
         if (error) {
             console.log(error);
         } console.log(result);
+            console.log('Movie deleted from list');
+            connection.end();
     })
 };
 
@@ -127,6 +146,7 @@ exports.child = () => {
         if (error) {
             console.log(error);
         } console.log(result);
+        connection.end();
     })
 };
 
@@ -136,6 +156,7 @@ exports.averageCat = (user, category) => {
         if (error) {
             console.log(error);
         } console.log(result);
+        connection.end();
     })
 };
 
@@ -144,6 +165,7 @@ exports.showRatings = () => {
         if (error) {
             console.log(error);
         } console.log(result);
+        connection.end();
     })
 };
 
@@ -152,5 +174,6 @@ exports.showCatWatched = () => {
         if (error) {
             console.log(error);
         } console.log(result);
+        connection.end();
     })
 };
